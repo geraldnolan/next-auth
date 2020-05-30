@@ -9,6 +9,7 @@ import callback from './routes/callback'
 import session from './routes/session'
 import pages from './pages'
 import adapters from '../adapters'
+import accounts from './routes/accounts'
 
 const DEFAULT_SITE = ''
 const DEFAULT_BASE_PATH = '/api/auth'
@@ -237,6 +238,9 @@ export default async (req, res, userSuppliedOptions) => {
             return done()
           }
           break
+        case 'accounts':
+              accounts(req, res, options, done)
+            break
         case 'check-email':
           if (options.pages.checkEmail) { return redirect(options.pages.checkEmail) }
 
@@ -271,6 +275,7 @@ export default async (req, res, userSuppliedOptions) => {
             return done()
           }
           break
+        
         default:
           res.status(400).end(`Error: HTTP POST is not supported for ${url}`)
           return done()

@@ -218,6 +218,14 @@ const Adapter = (config, options = {}) => {
     async function deleteUser (userId) {
       _debug('deleteUser', userId)
       // @TODO Delete user from DB
+
+      try {
+        return await connection.getRepository(User).softDelete({ userId })
+      } catch (error) {
+        console.error('DELETE_USER_ERROR', error)
+        return Promise.reject(new Error('DELETE_USER_ERROR', error))
+      }
+
       return false
     }
 
@@ -327,6 +335,26 @@ const Adapter = (config, options = {}) => {
       }
     }
 
+    async function getAccount (userId) {
+      _debug('getAccount', userId)
+      try {
+        return connection.getRepository(Account).findOne({ userId  })
+      } catch (error) {
+        console.error('GET_ACCOUNT_BY_USERID_ERROR', error)
+        return Promise.reject(new Error('GET_ACCOUNT_BY_USERID_ERROR', error))
+      }
+    }
+
+    async function getAccounts (userId) {
+      _debug('getAccounts', userId)
+      try {
+        return connection.getRepository(Account).find({ userId  })
+      } catch (error) {
+        console.error('GET_ACCOUNTS_BY_USERID_ERROR', error)
+        return Promise.reject(new Error('GET_ACCOUNTS_BY_USERID_ERROR', error))
+      }
+    }
+
     async function createEmailVerification (email, url, token, secret, provider) {
       _debug('createEmailVerification', email)
       try {
@@ -407,6 +435,8 @@ const Adapter = (config, options = {}) => {
       getSession,
       updateSession,
       deleteSession,
+      getAccount,
+      getAccounts,
       createEmailVerification,
       getEmailVerification,
       deleteEmailVerification

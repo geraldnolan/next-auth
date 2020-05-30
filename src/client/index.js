@@ -24,6 +24,24 @@ const session = async ({ req, site, basePath, baseUrlCookieName } = {}) => {
   }
 }
 
+// Isomorphic get accounts method
+const accounts = async ({ req, site, basePath, baseUrlCookieName } = {}) => {
+  const baseUrl = _baseUrl({ req, site, basePath, baseUrlCookieName })
+  if (!baseUrl) { return null }
+
+  // If server side, send with cookies in header (sent automatically client side)
+  const fetchOptions = req ? { headers: { cookie: req.headers.cookie } } : {}
+  
+  try {
+    const res = await fetch(`${baseUrl}/accounts`, fetchOptions)
+    const data = await res.json()
+    return Object.keys(data).length > 0 ? data : null // Return null if accounts data empty
+  } catch (error) {
+    console.error('CLIENT_ACCOUNTS_ERROR', error)
+    return null
+  }
+}
+
 // Context to store session data globally
 const SessionContext = createContext()
 
@@ -109,6 +127,7 @@ const _getUrlPrefixFromCookies = (cookies, baseUrlCookieName) => {
 
 export default {
   session,
+  accounts,
   useSession,
   Provider
 }

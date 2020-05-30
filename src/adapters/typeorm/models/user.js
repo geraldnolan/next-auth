@@ -17,15 +17,27 @@ export const UserSchema = {
     },
     name: {
       type: 'varchar',
+      //comments: "Name",
       nullable: true
     },
     email: {
       type: 'varchar',
+      //comments: "Email of the User",
       unique: true
     },
     image: {
       type: 'varchar',
+      //comments: "Image URL",
+      nullable: true
+    },
+    dateCreated: {
+      type: 'timestamp',
+      default: () => 'CURRENT_TIMESTAMP'
+    },
+    dateUpdated: {
+      type: 'timestamp',
       nullable: true
     }
+
   }
 }
